@@ -1,20 +1,17 @@
 import os, json, math
 from datetime import datetime
 
-def fair(p): return round(100/p,2) if p>0 else 99
+def fair(p): return round(100/p,2) if p>1 else 99
 def frame_pct(e1,e2): return max(5,min(95,(1/(1+10**(-(e1-e2)/600)))*100))
-def race3(p): q=1-p; return (p**3)*(1+3*q+6*q*q)
-def win_best7(p): q=1-p; s=0
-def win_best7_fixed(p):
-    q=1-p; prob=0
-    for k in range(4): prob+= math.comb(3+k,k)*(p**4)*(q**k)
-    return prob
-def cs(p,q,n):
-    # n=1 for 4-1 (C4,1), n=2 for 4-2 (C5,2)
-    import math
-    c = 4 if n==1 else 10
-    return c*(p**4)*(q**n)
-def over55(p): q=1-p; return 1-((p**4)*(1+4*q)+(q**4)*(1+4*p))
+def probs(p):
+    q=1-p
+    return {
+        "p41": 4*(p**4)*q*100, "p42": 10*(p**4)*(q*q)*100,
+        "q41": 4*(q**4)*p*100, "q42": 10*(q**4)*(p*p)*100,
+        "win": (p**4 + 4*p**4*q + 10*p**4*q*q + 20*p**4*q*q*q)*100,
+        "r3": (p**3)*(1+3*q+6*q*q)*100,
+        "over": (1-((p**4)*(1+4*q)+(q**4)*(1+4*p)))*100
+    }
 
 ratings={}
 if os.path.exists("ratings_auto.json"):
@@ -27,37 +24,46 @@ matches=[
     {"p1":"Ding Junhui","p2":"Ashley Hugill","elo1":920,"elo2":765},
 ]
 
-html = f"""
+html=f"""
 <html><head><meta name='viewport' content='width=device-width'>
 <style>
-body{{background:#0a1a12;color:#fff;font-family:Arial;padding:8px}}
-.card{{background:#12291f;border-radius:14px;padding:12px;margin:14px 0;border:1px solid #1a3a2a}}
-.green{{background:#00ff88;color:#000;border-radius:12px;padding:4px 8px;float:right;font-size:11px;font-weight:bold}}
-input{{background:#000;color:#00ff88;border:1px solid #00ff88;border-radius:6px;width:58px;padding:5px;text-align:center;margin-left:6px}}
-.badge{{display:inline-block;background:#333;color:#aaa;padding:3px 7px;border-radius:6px;font-size:11px;margin-left:6px;min-width:120px}}
-.sec{{color:#00ff88;font-weight:bold;margin-top:10px;font-size:11px;border-top:1px solid #1a3a2a;padding-top:8px}}
-.combo{{background:#0a2a1a;border:1px dashed #00ff88;border-radius:8px;padding:6px 8px;margin-top:6px;font-size:11px}}
+body{{background:#0a1a12;color:#fff;font-family:Arial;padding:10px;margin:0}}
+.card{{background:#12291f;border-radius:16px;padding:14px;margin:14px 0;border:1px solid #1a3a2a}}
+.green{{background:#00ff88;color:#000;border-radius:12px;padding:4px 10px;float:right;font-size:11px;font-weight:bold}}
+.sec{{color:#00ff88;font-weight:bold;margin-top:14px;font-size:11px;border-top:1px solid #1a3a2a;padding-top:10px}}
+.row{{display:flex;align-items:center;flex-wrap:wrap;margin:6px 0;font-size:13px}}
+input[type=text]{{background:#000;color:#00ff88;border:1px solid #00ff88;border-radius:8px;width:62px;padding:6px;text-align:center;margin-left:8px}}
+.badge{{background:#2a2a2a;color:#999;padding:4px 8px;border-radius:8px;font-size:11px;margin-left:8px;min-width:120px}}
+.acca-bar{{position:sticky;bottom:0;background:#0f231a;border:2px solid #00ff88;border-radius:14px;padding:12px;margin-top:20px}}
+.tick{{width:18px;height:18px;accent-color:#00ff88;margin-right:6px}}
 </style>
 <script>
-function chk(id,fair){{let i=document.getElementById(id);let b=document.getElementById(id+'_b');let v=parseFloat(i.value);if(isNaN(v)){{b.innerText='Enter B365';b.style.background='#333';return;}}let e=((v/fair)-1)*100;if(v>fair){{b.style.background='#00ff88';b.style.color='#000';b.innerText='VALUE '+v+'>'+fair+' (+'+e.toFixed(1)+'%)'}}else{{b.style.background='#ff4444';b.style.color='#fff';b.innerText='NO VALUE ('+e.toFixed(1)+'%)'}} let idx=id.split('_')[1]; let a1=document.getElementById('a41_'+idx);let a2=document.getElementById('a42_'+idx);let box=document.getElementById('combo_'+idx);if(a1&&a2&&box){{let v1=parseFloat(a1.value);let v2=parseFloat(a2.value);if(!isNaN(v1)&&!isNaN(v2)){{let w=Math.min(v1*5,v2*5);let p=w-10;box.style.background=p>0?'#00ff8822':'#0a2a1a';box.innerHTML='COMBO £5+£5=£10 → Returns £'+w.toFixed(2)+' = '+(p>0?'+£'+p.toFixed(2)+' PROFIT':'-£'+Math.abs(p).toFixed(2))}}}}
-</script></head><body><h2>🎱 V5.9 FULL • 4 MARKETS + DUAL</h2>
+let sel={{}};
+function chk(id,f){{let i=document.getElementById(id);let b=document.getElementById(id+'_b');let v=parseFloat(i.value);if(isNaN(v)){{b.innerText='Enter';b.style.background='#2a2a2a';updateAcca();return;}}let e=((v/f)-1)*100;if(v>f){{b.style.background='#00ff88';b.style.color='#000';b.innerText='VALUE '+v+'>'+f+' (+'+e.toFixed(1)+'%)'}}else{{b.style.background='#ff4444';b.style.color='#fff';b.innerText='NO VALUE ('+e.toFixed(1)+'%)'}}updateAcca();}}
+function toggleAcca(cb,id,prob,label){{if(cb.checked)sel[id]={{prob:prob,label:label}};else delete sel[id];updateAcca();}}
+function updateAcca(){{
+let bar=document.getElementById('acca-bar');let keys=Object.keys(sel);if(keys.length==0){{bar.innerHTML='<b>ACCA BUILDER:</b> Tick 2-3 games from DIFFERENT matches. Same-match blocked by B365.';return;}}
+let tp=1;let bProd=1;let valid=true;let legs='';for(let k of keys){{let pr=sel[k].prob;tp*=(pr/100);let inp=document.getElementById(k);let bv=parseFloat(inp?inp.value:NaN);if(isNaN(bv))valid=false;else bProd*=bv;legs+='<div>'+sel[k].label+' '+pr.toFixed(1)+'% @ '+(isNaN(bv)?'--':bv)+'</div>';}}
+let fair=tp>0?1/tp:0;let pct=tp*100;let h='<b>🎯 '+keys.length+'-LEG ACCA (cross-game)</b><div style=margin:6px 0>'+legs+'</div><div>True '+pct.toFixed(3)+'% → Fair '+fair.toFixed(2)+'</div>';if(!valid)h+='<div style=color:#ffaa00>Enter B365 for all ticked legs</div>';else{{let edge=((bProd/fair)-1)*100;let col=edge>0?'#00ff88':'#ff4444';let txt=edge>0?'VALUE ✅':'NO VALUE ❌';h+='<div>B365 Acca '+bProd.toFixed(2)+' → <span style=background:'+col+';color:#000;padding:3px 8px;border-radius:8px;font-weight:bold>'+txt+' '+edge.toFixed(1)+'%</span></div><div style=font-size:11px;opacity:0.7>£10 returns £'+(bProd*10).toFixed(2)+'. Yesterday: 2/3 singles +£57.50 vs treble -£10</div>';}}bar.innerHTML=h;
+}}
+</script></head><body><h2>🎱 V6.0 • 4 MARKETS + CROSS-GAME ACCA</h2>
+<div style='opacity:0.6;font-size:11px'>Yesterday 2/3 singles +£57.50 | Treble 82.27 lost</div>
 """
 
 for idx,m in enumerate(matches):
     e1=ratings.get(m['p1'],m['elo1']); e2=ratings.get(m['p2'],m['elo2'])
-    fp=frame_pct(e1,e2); p=fp/100; q=1-p
-    r1=race3(p)*100; w1=win_best7_fixed(p)*100
-    c41=cs(p,q,1)*100; c42=cs(p,q,2)*100; c41b=cs(q,p,1)*100; c42b=cs(q,p,2)*100
-    ov=over55(p)*100
-    html+=f"""
-<div class='card'><b>{m['p1']} vs {m['p2']}</b><span class='green'>{fp:.1f}%</span>
-<div class='sec'>1. Race to 3</div>{m['p1']} {r1:.1f}% → Fair {fair(r1)} <input id='r1_{idx}' oninput="chk('r1_{idx}',{fair(r1)})"><span id='r1_{idx}_b' class='badge'>Enter</span><br>{m['p2']} {100-r1:.1f}% → Fair {fair(100-r1)} <input id='r2_{idx}' oninput="chk('r2_{idx}',{fair(100-r1)})"><span id='r2_{idx}_b' class='badge'>Enter</span>
-<div class='sec'>2. Match Win</div>{m['p1']} {w1:.1f}% → Fair {fair(w1)} <input id='w1_{idx}' oninput="chk('w1_{idx}',{fair(w1)})"><span id='w1_{idx}_b' class='badge'>Enter</span><br>{m['p2']} {100-w1:.1f}% → Fair {fair(100-w1)} <input id='w2_{idx}' oninput="chk('w2_{idx}',{fair(100-w1)})"><span id='w2_{idx}_b' class='badge'>Enter</span>
-<div class='sec'>3. Correct Score DUAL COVER</div>{m['p1']} 4-1 {c41:.1f}% → Fair {fair(c41)} <input id='a41_{idx}' oninput="chk('a41_{idx}',{fair(c41)})"><span id='a41_{idx}_b' class='badge'>Enter</span><br>{m['p1']} 4-2 {c42:.1f}% → Fair {fair(c42)} <input id='a42_{idx}' oninput="chk('a42_{idx}',{fair(c42)})"><span id='a42_{idx}_b' class='badge'>Enter</span><div id='combo_{idx}' class='combo'>Enter both B365 for combo profit</div>{m['p2']} 4-1 {c41b:.1f}% → Fair {fair(c41b)} <input id='b41_{idx}' oninput="chk('b41_{idx}',{fair(c41b)})"><span id='b41_{idx}_b' class='badge'>Enter</span><br>{m['p2']} 4-2 {c42b:.1f}% → Fair {fair(c42b)} <input id='b42_{idx}' oninput="chk('b42_{idx}',{fair(c42b)})"><span id='b42_{idx}_b' class='badge'>Enter</span>
-<div class='sec'>4. Over 5.5 Frames</div>Over {ov:.1f}% → Fair {fair(ov)} <input id='o_{idx}' oninput="chk('o_{idx}',{fair(ov)})"><span id='o_{idx}_b' class='badge'>Enter</span>
-</div>"""
+    fp=frame_pct(e1,e2); pr=probs(fp/100)
+    html+=f"""<div class='card'><b>{m['p1']} vs {m['p2']}</b><span class='green'>{fp:.1f}%</span>
+<div class='sec'>1. Race to 3</div><div class='row'>{m['p1']} {pr['r3']:.1f}% → Fair {fair(pr['r3'])} <input type=text id='r1_{idx}' oninput="chk('r1_{idx}',{fair(pr['r3'])})"><span id='r1_{idx}_b' class='badge'>Enter</span></div><div class='row'>{m['p2']} {100-pr['r3']:.1f}% → Fair {fair(100-pr['r3'])} <input type=text id='r2_{idx}' oninput="chk('r2_{idx}',{fair(100-pr['r3'])})"><span id='r2_{idx}_b' class='badge'>Enter</span></div>
+<div class='sec'>2. Match Win</div><div class='row'>{m['p1']} {pr['win']:.1f}% → Fair {fair(pr['win'])} <input type=text id='w1_{idx}' oninput="chk('w1_{idx}',{fair(pr['win'])})"><span id='w1_{idx}_b' class='badge'>Enter</span></div><div class='row'>{m['p2']} {100-pr['win']:.1f}% → Fair {fair(100-pr['win'])} <input type=text id='w2_{idx}' oninput="chk('w2_{idx}',{fair(100-pr['win'])})"><span id='w2_{idx}_b' class='badge'>Enter</span></div>
+<div class='sec'>3. Correct Score — tick for ACCA (cross-game only)</div>
+<div class='row'><input type=checkbox class='tick' onchange="toggleAcca(this,'a41_{idx}',{pr['p41']},'{m['p1']} 4-1')">{m['p1']} 4-1 {pr['p41']:.1f}% → Fair {fair(pr['p41'])} <input type=text id='a41_{idx}' oninput="chk('a41_{idx}',{fair(pr['p41'])})"><span id='a41_{idx}_b' class='badge'>Enter</span></div>
+<div class='row'><input type=checkbox class='tick' onchange="toggleAcca(this,'a42_{idx}',{pr['p42']},'{m['p1']} 4-2')">{m['p1']} 4-2 {pr['p42']:.1f}% → Fair {fair(pr['p42'])} <input type=text id='a42_{idx}' oninput="chk('a42_{idx}',{fair(pr['p42'])})"><span id='a42_{idx}_b' class='badge'>Enter</span></div>
+<div class='row'><input type=checkbox class='tick' onchange="toggleAcca(this,'b41_{idx}',{pr['q41']},'{m['p2']} 4-1')">{m['p2']} 4-1 {pr['q41']:.1f}% → Fair {fair(pr['q41'])} <input type=text id='b41_{idx}' oninput="chk('b41_{idx}',{fair(pr['q41'])})"><span id='b41_{idx}_b' class='badge'>Enter</span></div>
+<div class='row'><input type=checkbox class='tick' onchange="toggleAcca(this,'b42_{idx}',{pr['q42']},'{m['p2']} 4-2')">{m['p2']} 4-2 {pr['q42']:.1f}% → Fair {fair(pr['q42'])} <input type=text id='b42_{idx}' oninput="chk('b42_{idx}',{fair(pr['q42'])})"><span id='b42_{idx}_b' class='badge'>Enter</span></div>
+<div class='sec'>4. Over 5.5</div><div class='row'>Over {pr['over']:.1f}% → Fair {fair(pr['over'])} <input type=text id='ov_{idx}' oninput="chk('ov_{idx}',{fair(pr['over'])})"><span id='ov_{idx}_b' class='badge'>Enter</span></div></div>"""
 
-html+="</body></html>"
+html+="<div id='acca-bar' class='acca-bar'><b>ACCA BUILDER:</b> Tick 2-3 games from DIFFERENT matches. Same-match blocked by B365.</div></body></html>"
 os.makedirs("docs",exist_ok=True)
 open("docs/index.html","w").write(html)
-print("V5.9 built")
+print("V6.0 built")
