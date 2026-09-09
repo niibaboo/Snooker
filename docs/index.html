@@ -1,38 +1,39 @@
 <html><head><meta name='viewport' content='width=device-width'>
 <style>
-body{background:#0a1a12;color:#fff;font-family:Arial;margin:0;padding:8px}
-.card{background:#12291f;border-radius:12px;padding:12px;margin:10px 0}
+body{background:#0a1a12;color:#fff;font-family:Arial;padding:8px}
+.card{background:#12291f;border-radius:12px;padding:12px;margin:12px 0}
 .green{background:#00ff88;color:#000;border-radius:12px;padding:4px 8px;float:right;font-size:11px;font-weight:bold}
-h2{margin:10px}
-</style></head><body>
-<h2>🎱 Snooker IQ V5.1 AUTO</h2>
-<div style='opacity:0.6;font-size:11px;margin:0 10px 10px'>Our Model Only • Frame% → Fair Odds • Built 09 Sep 08:39 BST • Auto 5m</div>
+input{background:#000;color:#00ff88;border:1px solid #00ff88;border-radius:6px;width:60px;padding:5px;text-align:center;margin-left:6px;font-size:14px}
+.badge{display:none;background:#00ff88;color:#000;font-weight:bold;padding:3px 8px;border-radius:6px;font-size:12px;margin-left:6px}
+.title{color:#00ff88;font-weight:bold;margin-top:10px;font-size:12px}
+</style>
+<script>
+function check(id,fair){let inp=document.getElementById(id);let badge=document.getElementById(id+'_b');let v=parseFloat(inp.value);if(v>fair){badge.style.display='inline';badge.innerText='VALUE @ '+v+' > '+fair;}else{badge.style.display='none';}}
+</script></head><body>
+<h2>🎱 Snooker IQ V5.4 AUTO</h2>
+<div style='opacity:0.6;font-size:11px;margin:0 10px'>Frame% = AUTO from Elo • You ONLY type Bet365 • Built 09 Sep 09:08 BST</div>
 
 <div class='card'>
-<b>Ding Junhui vs Ashley Hugill</b> <span class='green'>frame 70.9% | Elo 920 vs 765</span><br><br>
-To Win: Ding Junhui 88.6% → Fair 1.13<br>
-To Win: Ashley Hugill 11.4% → Fair 8.77<br><br>
-Correct 4-2 Ding Junhui 21.4% → Fair 4.67<br>
-Over 5.5 42.5% → Fair 2.35
+<b>Sam Craigie vs Joe O'Connor</b> <span class='green'>AUTO frame 46.2% | Elo 785 vs 825</span><br>
+<div class='title'>RACE TO 3 (Your screenshot)</div>
+Sam Craigie 42.8% → Fair 2.33 <input id='r1_0' placeholder='B365' oninput="check('r1_0',2.33)"><span id='r1_0_b' class='badge'></span><br>
+Joe O'Connor 57.2% → Fair 1.75 <input id='r2_0' placeholder='B365' oninput="check('r2_0',1.75)"><span id='r2_0_b' class='badge'></span>
 </div>
 <div class='card'>
-<b>Zhang Anda vs Mark Selby</b> <span class='green'>frame 37.3% | Elo 845 vs 935</span><br><br>
-To Win: Zhang Anda 24.0% → Fair 4.17<br>
-To Win: Mark Selby 76.0% → Fair 1.32<br><br>
-Correct 4-2 Zhang Anda 7.6% → Fair 13.16<br>
-Over 5.5 54.7% → Fair 1.83
+<b>Ding Junhui vs Ashley Hugill</b> <span class='green'>AUTO frame 64.4% | Elo 920 vs 765</span><br>
+<div class='title'>RACE TO 3 (Your screenshot)</div>
+Ding Junhui 75.6% → Fair 1.32 <input id='r1_1' placeholder='B365' oninput="check('r1_1',1.32)"><span id='r1_1_b' class='badge'></span><br>
+Ashley Hugill 24.4% → Fair 4.1 <input id='r2_1' placeholder='B365' oninput="check('r2_1',4.1)"><span id='r2_1_b' class='badge'></span>
 </div>
 <div class='card'>
-<b>Kyren Wilson vs Chang Bingyu</b> <span class='green'>frame 79.5% | Elo 945 vs 710</span><br><br>
-To Win: Kyren Wilson 96.3% → Fair 1.04<br>
-To Win: Chang Bingyu 3.7% → Fair 27.03<br><br>
-Correct 4-2 Kyren Wilson 16.8% → Fair 5.95<br>
-Over 5.5 26.6% → Fair 3.76
+<b>Zhang Anda vs Mark Selby</b> <span class='green'>AUTO frame 41.5% | Elo 845 vs 935</span><br>
+<div class='title'>RACE TO 3 (Your screenshot)</div>
+Zhang Anda 34.3% → Fair 2.92 <input id='r1_2' placeholder='B365' oninput="check('r1_2',2.92)"><span id='r1_2_b' class='badge'></span><br>
+Mark Selby 65.7% → Fair 1.52 <input id='r2_2' placeholder='B365' oninput="check('r2_2',1.52)"><span id='r2_2_b' class='badge'></span>
 </div>
 <div class='card'>
-<b>Judd Trump vs Ashley Carty</b> <span class='green'>frame 81.7% | Elo 985 vs 725</span><br><br>
-To Win: Judd Trump 97.6% → Fair 1.02<br>
-To Win: Ashley Carty 2.4% → Fair 41.67<br><br>
-Correct 4-2 Judd Trump 15.2% → Fair 6.58<br>
-Over 5.5 24.1% → Fair 4.15
+<b>Kyren Wilson vs Chang Bingyu</b> <span class='green'>AUTO frame 71.1% | Elo 945 vs 710</span><br>
+<div class='title'>RACE TO 3 (Your screenshot)</div>
+Kyren Wilson 85.2% → Fair 1.17 <input id='r1_3' placeholder='B365' oninput="check('r1_3',1.17)"><span id='r1_3_b' class='badge'></span><br>
+Chang Bingyu 14.8% → Fair 6.74 <input id='r2_3' placeholder='B365' oninput="check('r2_3',6.74)"><span id='r2_3_b' class='badge'></span>
 </div></body></html>
