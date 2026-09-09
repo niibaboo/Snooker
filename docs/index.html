@@ -1,64 +1,33 @@
 
 <html><head><meta name='viewport' content='width=device-width'>
 <style>
-body{background:#0a1a12;color:#fff;font-family:Arial;padding:8px;margin:0}
+body{background:#0a1a12;color:#fff;font-family:Arial;padding:8px}
 .card{background:#12291f;border-radius:14px;padding:12px;margin:14px 0;border:1px solid #1a3a2a}
 .green{background:#00ff88;color:#000;border-radius:12px;padding:4px 8px;float:right;font-size:11px;font-weight:bold}
-input{background:#000;color:#00ff88;border:1px solid #00ff88;border-radius:6px;width:56px;padding:5px;text-align:center;margin-left:6px}
-.badge{display:inline-block;background:#333;color:#aaa;padding:3px 7px;border-radius:6px;font-size:11px;margin-left:6px}
-.sec{color:#00ff88;font-weight:bold;margin-top:10px;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;border-top:1px solid #1a3a2a;padding-top:8px}
-/* YOUR LIKED INTERFACE */
-.result-card{background:#0f231a;border:1px solid #1d3a2b;border-radius:16px;padding:12px 14px;margin:10px 0}
-.result-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.result-ft{background:#ff2d2d;color:#fff;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:bold}
-.result-grid{display:grid;grid-template-columns:1.6fr 0.6fr 0.6fr 0.6fr;gap:6px;font-size:13px;opacity:0.8}
-.result-grid b{opacity:1}
-.edge-win{color:#00ff88;font-weight:bold}
+input{background:#000;color:#00ff88;border:1px solid #00ff88;border-radius:6px;width:58px;padding:5px;text-align:center;margin-left:6px}
+.badge{display:inline-block;background:#333;color:#aaa;padding:3px 7px;border-radius:6px;font-size:11px;margin-left:6px;min-width:120px}
+.sec{color:#00ff88;font-weight:bold;margin-top:10px;font-size:11px;border-top:1px solid #1a3a2a;padding-top:8px}
+.combo{background:#0a2a1a;border:1px dashed #00ff88;border-radius:8px;padding:6px 8px;margin-top:6px;font-size:11px}
 </style>
 <script>
-function chk(id,fair){
-  let i=document.getElementById(id); let b=document.getElementById(id+'_b'); let v=parseFloat(i.value);
-  if(isNaN(v)){b.innerText='Enter B365'; b.style.background='#333'; b.style.color='#aaa'; return;}
-  let edge=((v/fair)-1)*100;
-  if(v>fair){b.style.background='#00ff88'; b.style.color='#000'; b.innerText='VALUE '+v+'>'+fair+' (+'+edge.toFixed(1)+'%)';}
-  else{b.style.background='#ff4444'; b.style.color='#fff'; b.innerText='NO VALUE '+v+'<'+fair+' ('+edge.toFixed(1)+'%)';}
-}
-</script></head><body>
-<h2>🎱 Snooker IQ V5.7 • RESULTS + 4 MARKETS</h2>
-<div style='margin:10px 0'><b style='color:#00ff88'>📊 RESULTS TRACKER</b></div>
-<div class='result-card'>
-  <div class='result-top'><b>Stuart Bingham vs Anthony McGill — McGill WON 4-3</b><span class='result-ft' style='background:#ff2d2d'>FT 3-4</span></div>
-  <div class='result-grid'>
-    <div style='opacity:0.5'>Score</div><div style='opacity:0.5'>True%</div><div style='opacity:0.5'>Bet365</div><div style='opacity:0.5'>EDGE</div>
-    <div> McGill WON 4-3</div><div>12.5%</div><div>9.0</div><div class='edge-win'>+12.5%<br>✅</div>
-  </div>
+function chk(id,fair){let i=document.getElementById(id);let b=document.getElementById(id+'_b');let v=parseFloat(i.value);if(isNaN(v)){b.innerText='Enter B365';b.style.background='#333';return;}let e=((v/fair)-1)*100;if(v>fair){b.style.background='#00ff88';b.style.color='#000';b.innerText='VALUE '+v+'>'+fair+' (+'+e.toFixed(1)+'%)'}else{b.style.background='#ff4444';b.style.color='#fff';b.innerText='NO VALUE ('+e.toFixed(1)+'%)'} let idx=id.split('_')[1]; let a1=document.getElementById('a41_'+idx);let a2=document.getElementById('a42_'+idx);let box=document.getElementById('combo_'+idx);if(a1&&a2&&box){let v1=parseFloat(a1.value);let v2=parseFloat(a2.value);if(!isNaN(v1)&&!isNaN(v2)){let w=Math.min(v1*5,v2*5);let p=w-10;box.style.background=p>0?'#00ff8822':'#0a2a1a';box.innerHTML='COMBO £5+£5=£10 → Returns £'+w.toFixed(2)+' = '+(p>0?'+£'+p.toFixed(2)+' PROFIT':'-£'+Math.abs(p).toFixed(2))}}
+</script></head><body><h2>🎱 V5.9 FULL • 4 MARKETS + DUAL</h2>
+
+<div class='card'><b>Sam Craigie vs Joe O'Connor</b><span class='green'>46.2%</span>
+<div class='sec'>1. Race to 3</div>Sam Craigie 42.8% → Fair 2.33 <input id='r1_0' oninput="chk('r1_0',2.33)"><span id='r1_0_b' class='badge'>Enter</span><br>Joe O'Connor 57.2% → Fair 1.75 <input id='r2_0' oninput="chk('r2_0',1.75)"><span id='r2_0_b' class='badge'>Enter</span>
+<div class='sec'>2. Match Win</div>Sam Craigie 41.7% → Fair 2.4 <input id='w1_0' oninput="chk('w1_0',2.4)"><span id='w1_0_b' class='badge'>Enter</span><br>Joe O'Connor 58.3% → Fair 1.71 <input id='w2_0' oninput="chk('w2_0',1.71)"><span id='w2_0_b' class='badge'>Enter</span>
+<div class='sec'>3. Correct Score DUAL COVER</div>Sam Craigie 4-1 9.8% → Fair 10.22 <input id='a41_0' oninput="chk('a41_0',10.22)"><span id='a41_0_b' class='badge'>Enter</span><br>Sam Craigie 4-2 13.2% → Fair 7.59 <input id='a42_0' oninput="chk('a42_0',7.59)"><span id='a42_0_b' class='badge'>Enter</span><div id='combo_0' class='combo'>Enter both B365 for combo profit</div>Joe O'Connor 4-1 15.5% → Fair 6.45 <input id='b41_0' oninput="chk('b41_0',6.45)"><span id='b41_0_b' class='badge'>Enter</span><br>Joe O'Connor 4-2 17.9% → Fair 5.59 <input id='b42_0' oninput="chk('b42_0',5.59)"><span id='b42_0_b' class='badge'>Enter</span>
+<div class='sec'>4. Over 5.5 Frames</div>Over 61.8% → Fair 1.62 <input id='o_0' oninput="chk('o_0',1.62)"><span id='o_0_b' class='badge'>Enter</span>
 </div>
-<div class='result-card'>
-  <div class='result-top'><b>Ding Junhui vs Ashley Hugill — Ding 4-2</b><span class='result-ft' style='background:#ff2d2d'>FT 4-2</span></div>
-  <div class='result-grid'>
-    <div style='opacity:0.5'>Score</div><div style='opacity:0.5'>True%</div><div style='opacity:0.5'>Bet365</div><div style='opacity:0.5'>EDGE</div>
-    <div> Ding 4-2</div><div>21.8%</div><div>4.0</div><div class='edge-win'>+14.8%<br>✅</div>
-  </div>
+<div class='card'><b>Barry Hawkins vs Daniel Wells</b><span class='green'>60.4%</span>
+<div class='sec'>1. Race to 3</div>Barry Hawkins 68.9% → Fair 1.45 <input id='r1_1' oninput="chk('r1_1',1.45)"><span id='r1_1_b' class='badge'>Enter</span><br>Daniel Wells 31.1% → Fair 3.22 <input id='r2_1' oninput="chk('r2_1',3.22)"><span id='r2_1_b' class='badge'>Enter</span>
+<div class='sec'>2. Match Win</div>Barry Hawkins 71.8% → Fair 1.39 <input id='w1_1' oninput="chk('w1_1',1.39)"><span id='w1_1_b' class='badge'>Enter</span><br>Daniel Wells 28.2% → Fair 3.54 <input id='w2_1' oninput="chk('w2_1',3.54)"><span id='w2_1_b' class='badge'>Enter</span>
+<div class='sec'>3. Correct Score DUAL COVER</div>Barry Hawkins 4-1 21.1% → Fair 4.74 <input id='a41_1' oninput="chk('a41_1',4.74)"><span id='a41_1_b' class='badge'>Enter</span><br>Barry Hawkins 4-2 20.9% → Fair 4.79 <input id='a42_1' oninput="chk('a42_1',4.79)"><span id='a42_1_b' class='badge'>Enter</span><div id='combo_1' class='combo'>Enter both B365 for combo profit</div>Daniel Wells 4-1 5.9% → Fair 16.83 <input id='b41_1' oninput="chk('b41_1',16.83)"><span id='b41_1_b' class='badge'>Enter</span><br>Daniel Wells 4-2 9.0% → Fair 11.15 <input id='b42_1' oninput="chk('b42_1',11.15)"><span id='b42_1_b' class='badge'>Enter</span>
+<div class='sec'>4. Over 5.5 Frames</div>Over 57.2% → Fair 1.75 <input id='o_1' oninput="chk('o_1',1.75)"><span id='o_1_b' class='badge'>Enter</span>
 </div>
-<div class='result-card'>
-  <div class='result-top'><b>Sam Craigie vs Joe O'Connor — Sam ML</b><span class='result-ft' style='background:#555'>PENDING</span></div>
-  <div class='result-grid'>
-    <div style='opacity:0.5'>Score</div><div style='opacity:0.5'>True%</div><div style='opacity:0.5'>Bet365</div><div style='opacity:0.5'>EDGE</div>
-    <div> Sam ML</div><div>41.7%</div><div>3.2</div><div class='edge-win'>+33.3%<br>⏳</div>
-  </div>
-</div><div class='card'><b>Sam Craigie vs Joe O'Connor</b><span class='green'>AUTO 46.2%</span>
-<div class='sec'>Race to 3</div>Sam Craigie 42.8% → Fair 2.33 <input id='r1_0' oninput="chk('r1_0',2.33)"><span id='r1_0_b' class='badge'>Enter</span>
-<div class='sec'>Match Win</div>Sam Craigie 41.7% → Fair 2.4 <input id='w1_0' oninput="chk('w1_0',2.4)"><span id='w1_0_b' class='badge'>Enter</span>
-<div class='sec'>Correct Score 4-2</div>Sam Craigie 4-2 13.2% → Fair 7.59 <input id='c_0' oninput="chk('c_0',7.59)"><span id='c_0_b' class='badge'>Enter</span>
-<div class='sec'>Over 5.5</div>Over 61.8% → Fair 1.62 <input id='o_0' oninput="chk('o_0',1.62)"><span id='o_0_b' class='badge'>Enter</span>
-</div><div class='card'><b>Ding Junhui vs Ashley Hugill</b><span class='green'>AUTO 64.4%</span>
-<div class='sec'>Race to 3</div>Ding Junhui 75.6% → Fair 1.32 <input id='r1_1' oninput="chk('r1_1',1.32)"><span id='r1_1_b' class='badge'>Enter</span>
-<div class='sec'>Match Win</div>Ding Junhui 79.1% → Fair 1.26 <input id='w1_1' oninput="chk('w1_1',1.26)"><span id='w1_1_b' class='badge'>Enter</span>
-<div class='sec'>Correct Score 4-2</div>Ding Junhui 4-2 21.8% → Fair 4.59 <input id='c_1' oninput="chk('c_1',4.59)"><span id='c_1_b' class='badge'>Enter</span>
-<div class='sec'>Over 5.5</div>Over 52.5% → Fair 1.9 <input id='o_1' oninput="chk('o_1',1.9)"><span id='o_1_b' class='badge'>Enter</span>
-</div><div class='card'><b>Zhang Anda vs Mark Selby</b><span class='green'>AUTO 41.5%</span>
-<div class='sec'>Race to 3</div>Zhang Anda 34.3% → Fair 2.92 <input id='r1_2' oninput="chk('r1_2',2.92)"><span id='r1_2_b' class='badge'>Enter</span>
-<div class='sec'>Match Win</div>Zhang Anda 31.8% → Fair 3.14 <input id='w1_2' oninput="chk('w1_2',3.14)"><span id='w1_2_b' class='badge'>Enter</span>
-<div class='sec'>Correct Score 4-2</div>Zhang Anda 4-2 10.1% → Fair 9.88 <input id='c_2' oninput="chk('c_2',9.88)"><span id='c_2_b' class='badge'>Enter</span>
-<div class='sec'>Over 5.5</div>Over 58.9% → Fair 1.7 <input id='o_2' oninput="chk('o_2',1.7)"><span id='o_2_b' class='badge'>Enter</span>
+<div class='card'><b>Ding Junhui vs Ashley Hugill</b><span class='green'>64.4%</span>
+<div class='sec'>1. Race to 3</div>Ding Junhui 75.6% → Fair 1.32 <input id='r1_2' oninput="chk('r1_2',1.32)"><span id='r1_2_b' class='badge'>Enter</span><br>Ashley Hugill 24.4% → Fair 4.1 <input id='r2_2' oninput="chk('r2_2',4.1)"><span id='r2_2_b' class='badge'>Enter</span>
+<div class='sec'>2. Match Win</div>Ding Junhui 79.1% → Fair 1.26 <input id='w1_2' oninput="chk('w1_2',1.26)"><span id='w1_2_b' class='badge'>Enter</span><br>Ashley Hugill 20.9% → Fair 4.78 <input id='w2_2' oninput="chk('w2_2',4.78)"><span id='w2_2_b' class='badge'>Enter</span>
+<div class='sec'>3. Correct Score DUAL COVER</div>Ding Junhui 4-1 24.5% → Fair 4.08 <input id='a41_2' oninput="chk('a41_2',4.08)"><span id='a41_2_b' class='badge'>Enter</span><br>Ding Junhui 4-2 21.8% → Fair 4.59 <input id='a42_2' oninput="chk('a42_2',4.59)"><span id='a42_2_b' class='badge'>Enter</span><div id='combo_2' class='combo'>Enter both B365 for combo profit</div>Ashley Hugill 4-1 4.1% → Fair 24.28 <input id='b41_2' oninput="chk('b41_2',24.28)"><span id='b41_2_b' class='badge'>Enter</span><br>Ashley Hugill 4-2 6.6% → Fair 15.07 <input id='b42_2' oninput="chk('b42_2',15.07)"><span id='b42_2_b' class='badge'>Enter</span>
+<div class='sec'>4. Over 5.5 Frames</div>Over 52.5% → Fair 1.9 <input id='o_2' oninput="chk('o_2',1.9)"><span id='o_2_b' class='badge'>Enter</span>
 </div></body></html>
