@@ -1,90 +1,93 @@
-import os, json, requests, math
+import os, json, math
 from datetime import datetime
 
-# --- AUTO ELO ---
-def get_elo(p):
-    # simple Elo diff to frame% - no typing needed
-    return ratings.get(p, 750)
-
-def frame_pct(elo1, elo2):
-    diff = elo1 - elo2
-    # 600 divisor = snooker frame variance, 50% baseline
-    p = 1 / (1 + 10**(-diff/600))
-    return max(5, min(95, p*100))
-
-def race_to_3(p):
+def fair(p): return round(1/(p/100),2) if p>0.5 else round(1/(p/100),2)
+def frame_pct(e1,e2):
+    diff=e1-e2
+    p=1/(1+10**(-diff/600))
+    return max(5,min(95,p*100))
+def race3(p):
     q=1-p
-    return (p**3)*(1 + 3*q + 6*q*q)
+    return (p**3)*(1+3*q+6*q*q)
+def win_best7(p):
+    q=1-p
+    # first to 4: sum k=0..3 C(3+k,k) p^4 q^k
+    prob=0
+    for k in range(4):
+        prob+= math.comb(3+k,k) * (p**4)*(q**k)
+    return prob
+def cs_4_2(p):
+    q=1-p
+    return math.comb(5,2)*(p**4)*(q**2) # 10 * p^4 q^2
 
-def fair(p): 
-    return round(1/(p/100),2) if p>1 else 99
-
-# load ratings
-ratings = {}
+ratings={}
 if os.path.exists("ratings_auto.json"):
-    try: ratings = json.load(open("ratings_auto.json"))
-    except: ratings = {}
+    try: ratings=json.load(open("ratings_auto.json"))
+    except: pass
 
-# --- AUTO MATCHES TODAY - no typing ---
-# Try fetch from snooker.org, fallback to yesterday's list
-matches_auto = []
-try:
-    r = requests.get("https://api.snooker.org/?t=6&s=2025", timeout=15).json()
-    # r is list of matches, parse next 10
-    for ev in r[:15]:
-        if isinstance(ev, dict) and 'Player1ID' in ev:
-            p1 = ev.get('Player1','Player1')
-            p2 = ev.get('Player2','Player2')
-            matches_auto.append({"p1":p1,"p2":p2})
-except Exception as e:
-    print(f"API fail {e}")
+matches_auto=[
+    {"p1":"Sam Craigie","p2":"Joe O'Connor"},
+    {"p1":"Ding Junhui","p2":"Ashley Hugill"},
+    {"p1":"Zhang Anda","p2":"Mark Selby"},
+    {"p1":"Kyren Wilson","p2":"Chang Bingyu"},
+    {"p1":"Judd Trump","p2":"Ashley Carty"},
+]
 
-if not matches_auto:
-    # fallback - your current card, will be auto-replaced when API works
-    matches_auto = [
-        {"p1":"Sam Craigie","p2":"Joe O'Connor"},
-        {"p1":"Ding Junhui","p2":"Ashley Hugill"},
-        {"p1":"Zhang Anda","p2":"Mark Selby"},
-        {"p1":"Kyren Wilson","p2":"Chang Bingyu"},
-    ]
-
-# build final with auto frame%
-final = []
+final=[]
 for m in matches_auto:
-    e1 = get_elo(m['p1']); e2 = get_elo(m['p2'])
-    fp = frame_pct(e1,e2)
-    final.append({**m, "elo1":e1, "elo2":e2, "frame":fp})
+    e1=ratings.get(m['p1'], 800 if 'Craigie' in m['p1'] else 850)
+    e2=ratings.get(m['p2'], 825)
+    # override with your live Elos from screenshot
+    if m['p1']=='Sam Craigie': e1=785
+    if m['p2']=="Joe O'Connor": e2=825
+    if m['p1']=='Ding Junhui': e1=920; e2=765
+    if m['p1']=='Zhang Anda': e1=845; e2=935
+    if m['p1']=='Kyren Wilson': e1=945; e2=710
+    if m['p1']=='Judd Trump': e1=985; e2=725
+    fp=frame_pct(e1,e2)
+    final.append({**m,"elo1":e1,"elo2":e2,"frame":fp})
 
-now = datetime.now().strftime("%d %b %H:%M BST")
+now=datetime.now().strftime("%d %b %H:%M BST")
 html=f"""<html><head><meta name='viewport' content='width=device-width'>
 <style>
-body{{background:#0a1a12;color:#fff;font-family:Arial;padding:8px}}
-.card{{background:#12291f;border-radius:12px;padding:12px;margin:12px 0}}
+body{{background:#0a1a12;color:#fff;font-family:Arial;padding:8px;margin:0}}
+.card{{background:#12291f;border-radius:14px;padding:12px;margin:14px 0;border:1px solid #1a3a2a}}
 .green{{background:#00ff88;color:#000;border-radius:12px;padding:4px 8px;float:right;font-size:11px;font-weight:bold}}
-input{{background:#000;color:#00ff88;border:1px solid #00ff88;border-radius:6px;width:60px;padding:5px;text-align:center;margin-left:6px;font-size:14px}}
-.badge{{display:none;background:#00ff88;color:#000;font-weight:bold;padding:3px 8px;border-radius:6px;font-size:12px;margin-left:6px}}
-.title{{color:#00ff88;font-weight:bold;margin-top:10px;font-size:12px}}
+input{{background:#000;color:#00ff88;border:1px solid #00ff88;border-radius:6px;width:56px;padding:5px;text-align:center;margin-left:6px}}
+.badge{{display:none;background:#00ff88;color:#000;font-weight:bold;padding:3px 7px;border-radius:6px;font-size:11px;margin-left:6px}}
+.sec{{color:#00ff88;font-weight:bold;margin-top:10px;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;border-top:1px solid #1a3a2a;padding-top:8px}}
 </style>
 <script>
-function check(id,fair){{let inp=document.getElementById(id);let badge=document.getElementById(id+'_b');let v=parseFloat(inp.value);if(v>fair){{badge.style.display='inline';badge.innerText='VALUE @ '+v+' > '+fair;}}else{{badge.style.display='none';}}}}
+function chk(id,fair){{let i=document.getElementById(id);let b=document.getElementById(id+'_b');let v=parseFloat(i.value);if(!isNaN(v)&&v>fair){{b.style.display='inline';b.innerText='VALUE '+v+'>'+fair;}}else{{b.style.display='none';}}}}
 </script></head><body>
-<h2>🎱 Snooker IQ V5.4 AUTO</h2>
-<div style='opacity:0.6;font-size:11px;margin:0 10px'>Frame% = AUTO from Elo • You ONLY type Bet365 • Built {now}</div>
+<h2>🎱 Snooker IQ V5.5 • 3 MARKETS</h2>
+<div style='opacity:0.6;font-size:11px;margin:0 10px 10px'>AUTO frame% • Type B365 only • Built {now}</div>
 """
 
-for i,m in enumerate(final):
-    p=m['frame']/100
-    r1=race_to_3(p)*100; r2=100-r1
-    f_r1=fair(r1); f_r2=fair(r2)
+for idx,m in enumerate(final):
+    p=m['frame']/100; q=1-p
+    r1=race3(p)*100; r2=100-r1
+    w1=win_best7(p)*100; w2=100-w1
+    cs1=cs_4_2(p)*100; cs2=cs_4_2(q)*100
+
     html+=f"""
 <div class='card'>
-<b>{m['p1']} vs {m['p2']}</b> <span class='green'>AUTO frame {m['frame']:.1f}% | Elo {m['elo1']} vs {m['elo2']}</span><br>
-<div class='title'>RACE TO 3 (Your screenshot)</div>
-{m['p1']} {r1:.1f}% → Fair {f_r1} <input id='r1_{i}' placeholder='B365' oninput="check('r1_{i}',{f_r1})"><span id='r1_{i}_b' class='badge'></span><br>
-{m['p2']} {r2:.1f}% → Fair {f_r2} <input id='r2_{i}' placeholder='B365' oninput="check('r2_{i}',{f_r2})"><span id='r2_{i}_b' class='badge'></span>
+<b>{m['p1']} vs {m['p2']}</b> <span class='green'>AUTO {m['frame']:.1f}% | {m['elo1']} vs {m['elo2']}</span>
+
+<div class='sec'>1. Race to 3 Frames</div>
+{m['p1']} {r1:.1f}% → Fair {fair(r1)} <input id='r1_{idx}' placeholder='B365' oninput="chk('r1_{idx}',{fair(r1)})"><span id='r1_{idx}_b' class='badge'></span><br>
+{m['p2']} {r2:.1f}% → Fair {fair(r2)} <input id='r2_{idx}' placeholder='B365' oninput="chk('r2_{idx}',{fair(r2)})"><span id='r2_{idx}_b' class='badge'></span>
+
+<div class='sec'>2. Match Win (First to 4)</div>
+{m['p1']} {w1:.1f}% → Fair {fair(w1)} <input id='w1_{idx}' placeholder='B365' oninput="chk('w1_{idx}',{fair(w1)})"><span id='w1_{idx}_b' class='badge'></span><br>
+{m['p2']} {w2:.1f}% → Fair {fair(w2)} <input id='w2_{idx}' placeholder='B365' oninput="chk('w2_{idx}',{fair(w2)})"><span id='w2_{idx}_b' class='badge'></span>
+
+<div class='sec'>3. Correct Score 4-2</div>
+{m['p1']} 4-2 {cs1:.1f}% → Fair {fair(cs1)} <input id='c1_{idx}' placeholder='B365' oninput="chk('c1_{idx}',{fair(cs1)})"><span id='c1_{idx}_b' class='badge'></span><br>
+{m['p2']} 4-2 {cs2:.1f}% → Fair {fair(cs2)} <input id='c2_{idx}' placeholder='B365' oninput="chk('c2_{idx}',{fair(cs2)})"><span id='c2_{idx}_b' class='badge'></span>
 </div>"""
 
 html+="</body></html>"
 os.makedirs("docs",exist_ok=True)
 open("docs/index.html","w").write(html)
-print(f"V5.4 built {len(final)} matches auto frame%")
+print("V5.5 3 markets built")
