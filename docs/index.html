@@ -1,8 +1,7 @@
-
 <html><head><meta name='viewport' content='width=device-width,initial-scale=1'>
-<title>Snooker V6.1 Auto</title>
+<title>Snooker V6.3 Auto</title>
 <style>
-body{background:#0a1a12;color:#fff;font-family:Arial;padding:10px;margin:0;padding-bottom:100px}
+body{background:#0a1a12;color:#fff;font-family:Arial;padding:10px;margin:0;padding-bottom:120px}
 .card{background:#12291f;border-radius:16px;padding:14px;margin:14px 0;border:1px solid #1a3a2a}
 .green{background:#00ff88;color:#000;border-radius:12px;padding:4px 10px;float:right;font-size:11px;font-weight:bold}
 .sec{color:#00ff88;font-weight:bold;margin-top:14px;font-size:11px;border-top:1px solid #1a3a2a;padding-top:10px}
@@ -19,14 +18,13 @@ let sel={};
 function chk(id,f){let i=document.getElementById(id);let b=document.getElementById(id+'_b');let v=parseFloat(i.value);if(isNaN(v)){b.innerText='Enter';b.style.background='#2a2a2a';updateAcca();return;}let e=((v/f)-1)*100;if(v>f){b.style.background='#00ff88';b.style.color='#000';b.innerText='VALUE '+v+'>'+f+' (+'+e.toFixed(1)+'%)'}else{b.style.background='#ff4444';b.style.color='#fff';b.innerText='NO VALUE ('+e.toFixed(1)+'%)'}updateAcca();}
 function toggleAcca(cb,id,prob,label){if(cb.checked)sel[id]={prob:prob,label:label};else delete sel[id];updateAcca();}
 function updateAcca(){
-let bar=document.getElementById('acca-bar');let keys=Object.keys(sel);if(keys.length==0){bar.innerHTML='<b>ACCA BUILDER:</b> Tick 2-3 games from DIFFERENT matches. Same-match blocked by B365.';return;}
+let bar=document.getElementById('acca-bar');let keys=Object.keys(sel);if(keys.length==0){bar.innerHTML='<b>ACCA BUILDER:</b> Tick 2-3 from DIFFERENT matches. Same-match blocked.';return;}
 let tp=1;let bProd=1;let valid=true;let legs='';for(let k of keys){let pr=sel[k].prob;tp*=(pr/100);let inp=document.getElementById(k);let bv=parseFloat(inp?inp.value:NaN);if(isNaN(bv))valid=false;else bProd*=bv;legs+='<div>'+sel[k].label+' '+pr.toFixed(1)+'% @ '+(isNaN(bv)?'--':bv)+'</div>';}
-let fair=tp>0?1/tp:0;let pct=tp*100;let h='<b>🎯 '+keys.length+'-LEG ACCA (cross-game)</b><div style=margin:6px 0>'+legs+'</div><div>True '+pct.toFixed(3)+'% → Fair '+fair.toFixed(2)+'</div>';if(!valid)h+='<div style=color:#ffaa00>Enter B365 for all ticked legs</div>';else{let edge=((bProd/fair)-1)*100;let col=edge>0?'#00ff88':'#ff4444';let txt=edge>0?'VALUE ✅':'NO VALUE ❌';h+='<div>B365 Acca '+bProd.toFixed(2)+' → <span style=background:'+col+';color:#000;padding:3px 8px;border-radius:8px;font-weight:bold>'+txt+' '+edge.toFixed(1)+'%</span></div>';}bar.innerHTML=h;
+let fair=tp>0?1/tp:0;let h='<b>🎯 '+keys.length+'-LEG ACCA</b><div style=margin:6px 0>'+legs+'</div><div>True '+(tp*100).toFixed(3)+'% → Fair '+fair.toFixed(2)+'</div>';if(!valid)h+='<div style=color:#ffaa00>Enter B365 for all ticked legs</div>';else{let edge=((bProd/fair)-1)*100;let col=edge>0?'#00ff88':'#ff4444';h+='<div>B365 '+bProd.toFixed(2)+' → <span style=background:'+col+';color:#000;padding:3px 8px;border-radius:8px;font-weight:bold>'+(edge>0?'VALUE ✅ ':'NO VALUE ❌ ')+edge.toFixed(1)+'%</span></div>';}bar.innerHTML=h;
 }
 </script></head><body>
-<div class='topbar'><h2 style='margin:0'>🎱 V6.1 AUTO • 4 MARKETS + CROSS-GAME ACCA</h2>
-<div class='meta'>10 Sep 03:42 · 3 matches loaded · Ratings: 16 players</div>
-</div>
+<div class='topbar'><h2 style='margin:0'>🎱 V6.3 AUTO-ENGLISH-OPEN • 4 MARKETS</h2>
+<div class='meta'>10 Sep 03:52 · 3 matches · Auto WST live + snooker.org + CSV</div></div>
 <div class='card'><b>Kyren Wilson vs Zhang Anda</b><span class='green'>59.5%</span>
 <div class='sec'>1. Race to 3</div><div class='row'>Kyren Wilson 67.4% → Fair 1.48 <input type=text id='r1_0' oninput="chk('r1_0',1.48)"><span id='r1_0_b' class='badge'>Enter</span></div><div class='row'>Zhang Anda 32.6% → Fair 3.06 <input type=text id='r2_0' oninput="chk('r2_0',3.06)"><span id='r2_0_b' class='badge'>Enter</span></div>
 <div class='sec'>2. Match Win</div><div class='row'>Kyren Wilson 70.0% → Fair 1.43 <input type=text id='w1_0' oninput="chk('w1_0',1.43)"><span id='w1_0_b' class='badge'>Enter</span></div><div class='row'>Zhang Anda 30.0% → Fair 3.33 <input type=text id='w2_0' oninput="chk('w2_0',3.33)"><span id='w2_0_b' class='badge'>Enter</span></div>
@@ -51,4 +49,4 @@ let fair=tp>0?1/tp:0;let pct=tp*100;let h='<b>🎯 '+keys.length+'-LEG ACCA (cro
 <div class='row'><input type=checkbox class='tick' onchange="toggleAcca(this,'a42_2',15.625,'Mark Allen 4-2')">Mark Allen 4-2 15.6% → Fair 6.4 <input type=text id='a42_2' oninput="chk('a42_2',6.4)"><span id='a42_2_b' class='badge'>Enter</span></div>
 <div class='row'><input type=checkbox class='tick' onchange="toggleAcca(this,'b41_2',12.5,'Jack Lisowski 4-1')">Jack Lisowski 4-1 12.5% → Fair 8.0 <input type=text id='b41_2' oninput="chk('b41_2',8.0)"><span id='b41_2_b' class='badge'>Enter</span></div>
 <div class='row'><input type=checkbox class='tick' onchange="toggleAcca(this,'b42_2',15.625,'Jack Lisowski 4-2')">Jack Lisowski 4-2 15.6% → Fair 6.4 <input type=text id='b42_2' oninput="chk('b42_2',6.4)"><span id='b42_2_b' class='badge'>Enter</span></div>
-<div class='sec'>4. Over 5.5</div><div class='row'>Over 62.5% → Fair 1.6 <input type=text id='ov_2' oninput="chk('ov_2',1.6)"><span id='ov_2_b' class='badge'>Enter</span></div></div><div id='acca-bar' class='acca-bar'><b>ACCA BUILDER:</b> Tick 2-3 games from DIFFERENT matches.</div></body></html>
+<div class='sec'>4. Over 5.5</div><div class='row'>Over 62.5% → Fair 1.6 <input type=text id='ov_2' oninput="chk('ov_2',1.6)"><span id='ov_2_b' class='badge'>Enter</span></div></div><div id='acca-bar' class='acca-bar'><b>ACCA BUILDER:</b> Tick 2-3 from DIFFERENT matches.</div></body></html>
