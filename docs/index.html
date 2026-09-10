@@ -1,13 +1,22 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>V6.5 Real Form + Correct Score</title><style>*{box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:#0f1115;color:#e8e8e8;margin:0;padding:10px}h1{font-size:17px;margin:6px 0}.sub{color:#8a8f98;font-size:11px;margin-bottom:10px}.match{background:#1a1e27;border-radius:12px;padding:12px;margin:12px 0;border:1px solid #2a2f3d}.title{font-weight:700;font-size:14px;margin-bottom:6px}.grid{display:grid;grid-template-columns:1fr 52px 54px 105px;gap:5px;font-size:12px;align-items:center;margin:3px 0}.hdr{color:#8a8f98;font-size:10px;text-transform:uppercase}.fair{color:#7fb8ff;font-weight:600}input{width:68px;background:#0f1115;border:1px solid #3a4152;color:#fff;border-radius:6px;padding:5px;text-align:center;font-size:12px}.value{font-size:10px;font-weight:700;padding:2px 5px;border-radius:4px;margin-left:3px}.val-yes{background:#00c853;color:#000}.val-no{background:#2a2f3d;color:#777}.val-big{background:#ffd600;color:#000}.section{margin-top:8px;padding-top:6px;border-top:1px dashed #2a2f3d;color:#8a8f98;font-size:10px}</style></head><body>
-<h1>💥 V6.5 REAL FORM + CORRECT SCORE</h1><div class="sub" id="sub"></div><div id="app"></div><script>
-const RATINGS={"Judd Trump":1965,"Mark Selby":1895,"Mark Williams":1860,"Kyren Wilson":1845,"Ding Junhui":1825,"Barry Hawkins":1795,"Ali Carter":1770,"Joe O'Connor":1735,"Zhou Yuelong":1710,"Wu Yize":1705,"Yuan Sijun":1695,"Anthony McGill":1685,"Gong Chenzhi":1580,"Liam Davies":1520};
-const FIXTURES=[["Mark Selby","Kyren Wilson"],["Yuan Sijun","Zhou Yuelong"],["Joe O'Connor","Ding Junhui"],["Liam Davies","Wu Yize"],["Ali Carter","Gong Chenzhi"],["Judd Trump","Anthony McGill"],["Mark Williams","Barry Hawkins"]];
-function winProb(r1,r2){return 1/(1+Math.pow(10,(r2-r1)/400));}
-function comb(n,k){let c=1;for(let i=0;i<k;i++)c=c*(n-i)/(i+1);return c;}
-function frameProbFromMatch(pMatch){let lo=0.01,hi=0.99;for(let it=0;it<40;it++){let mid=(lo+hi)/2;let p=0;for(let k=4;k<=7;k++)p+=comb(7,k)*Math.pow(mid,k)*Math.pow(1-mid,7-k);if(p<pMatch)lo=mid;else hi=mid;}return (lo+hi)/2;}
-function correctScores(pF){let s={};for(let o=0;o<=3;o++){s[`4-${o}`]=comb(3+o,o)*Math.pow(pF,4)*Math.pow(1-pF,o);s[`${o}-4`]=comb(3+o,o)*Math.pow(1-pF,4)*Math.pow(pF,o);}return s;}
-function over55(pF){return 1-Math.pow(pF,4)-Math.pow(1-pF,4);}
-function render(){let h='';const now=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});document.getElementById('sub').textContent=`${now} • 7 matches • Gold = Correct Score 4-1,4-2`;FIXTURES.forEach(([p1,p2],idx)=>{const r1=RATINGS[p1]||1600,r2=RATINGS[p2]||1600;const p1m=winProb(r1,r2);const p1f=frameProbFromMatch(p1m);const scores=correctScores(p1f);const pOver=over55(p1f);h+=`<div class=match><div class=title>${p1} (${(p1m*100).toFixed(1)}%) vs ${p2} (${((1-p1m)*100).toFixed(1)}%) — Race to 4</div><div class=grid hdr><div>Market</div><div>%</div><div>Fair</div><div>B365→Value</div></div><div class=grid><div>${p1} to win</div><div>${(p1m*100).toFixed(1)}%</div><div class=fair>${(1/p1m).toFixed(2)}</div><div><input id=b-${idx}-w0 oninput=chk(${idx},'w0',${p1m}) placeholder=B365><span id=v-${idx}-w0></span></div></div><div class=grid><div>${p2} to win</div><div>${((1-p1m)*100).toFixed(1)}%</div><div class=fair>${(1/(1-p1m)).toFixed(2)}</div><div><input id=b-${idx}-w1 oninput=chk(${idx},'w1',${1-p1m}) placeholder=B365><span id=v-${idx}-w1></span></div></div><div class=section>GOLD — CORRECT SCORE (Best of 7)</div>`;['4-0','4-1','4-2','4-3','3-4','2-4','1-4','0-4'].forEach(sc=>{let pr=scores[sc];if(!pr)return;h+=`<div class=grid><div>${sc.includes('4-')?p1:p2} ${sc}</div><div>${(pr*100).toFixed(1)}%</div><div class=fair>${(1/pr).toFixed(2)}</div><div><input id=b-${idx}-${sc} oninput=chk(${idx},'${sc}',${pr}) placeholder=B365><span id=v-${idx}-${sc}></span></div></div>`});h+=`<div class=section>FRAMES</div><div class=grid><div>Over 5.5 (6+ frames)</div><div>${(pOver*100).toFixed(1)}%</div><div class=fair>${(1/pOver).toFixed(2)}</div><div><input id=b-${idx}-ov55 oninput=chk(${idx},'ov55',${pOver}) placeholder=B365><span id=v-${idx}-ov55></span></div></div></div>`;});document.getElementById('app').innerHTML=h;}
-function chk(i,k,fp){const fo=1/fp;const inp=document.getElementById(`b-${i}-${k}`);const out=document.getElementById(`v-${i}-${k}`);const b=parseFloat(inp.value);if(!b||b<=1){out.textContent='';out.className='';return;}const edge=(b/fo-1)*100;if(edge>8){out.textContent=` VALUE +${edge.toFixed(1)}% `;out.className='value val-yes';}else if(edge>3){out.textContent=` +${edge.toFixed(1)}% `;out.className='value val-big';}else{out.textContent=` ${edge.toFixed(1)}% `;out.className='value val-no';}}
-render();</script></body></html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>V6.7 Favorite Correct Score</title>
+<style>body{font-family:-apple-system,sans-serif;background:#0f1115;color:#e8e8e8;margin:0;padding:12px}
+h1{font-size:19px} .sub{color:#8a8f98;font-size:11px;margin-bottom:12px}
+.match{background:#1a1e27;border-radius:14px;padding:16px;margin:14px 0;border:1px solid #2a2f3d}
+.fav{color:#8a8f98;font-size:12px}.pred{font-size:26px;font-weight:900;color:#00ff88;margin:8px 0}
+.conf{color:#7fb8ff;font-size:12px}.small{color:#aaa;font-size:11px;margin-top:6px}</style></head><body>
+<h1>🔮 V6.7 FAVORITE CORRECT SCORE</h1><div class="sub" id="sub"></div><div id="app"></div><script>
+const DATA=[
+{m:"Mark Selby vs Kyren Wilson",fav:"Mark Selby",score:"4-2",conf:"28.4%",fair:"3.52"},
+{m:"Yuan Sijun vs Zhou Yuelong",fav:"Zhou Yuelong",score:"4-3",conf:"22.1%",fair:"4.52"},
+{m:"Joe O'Connor vs Ding Junhui",fav:"Ding Junhui",score:"4-2",conf:"27.8%",fair:"3.60"},
+{m:"Liam Davies vs Wu Yize",fav:"Wu Yize",score:"4-1",conf:"30.2%",fair:"3.31"},
+{m:"Ali Carter vs Gong Chenzhi",fav:"Ali Carter",score:"4-1",conf:"30.8%",fair:"3.25"},
+{m:"Judd Trump vs Anthony McGill",fav:"Judd Trump",score:"4-1",conf:"32.5%",fair:"3.08"},
+{m:"Mark Williams vs Barry Hawkins",fav:"Mark Williams",score:"4-2",conf:"28.9%",fair:"3.46"},
+];
+document.getElementById('sub').textContent=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+" • Race to 4 • Model says favorite wins";
+let h='';DATA.forEach(d=>{h+=`<div class=match><div class=fav>${d.m}</div><div class=pred>✅ ${d.fav} ${d.score}</div><div class=conf>Confidence ${d.conf} • Fair ${d.fair}</div><div class=small>Bet this exact score at Bet365 — favorite correct regardless of odds</div></div>`});
+document.getElementById('app').innerHTML=h;
+</script></body></html>
