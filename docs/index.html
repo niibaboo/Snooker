@@ -1,22 +1,110 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>V6.7 Favorite Correct Score</title>
-<style>body{font-family:-apple-system,sans-serif;background:#0f1115;color:#e8e8e8;margin:0;padding:12px}
-h1{font-size:19px} .sub{color:#8a8f98;font-size:11px;margin-bottom:12px}
-.match{background:#1a1e27;border-radius:14px;padding:16px;margin:14px 0;border:1px solid #2a2f3d}
-.fav{color:#8a8f98;font-size:12px}.pred{font-size:26px;font-weight:900;color:#00ff88;margin:8px 0}
-.conf{color:#7fb8ff;font-size:12px}.small{color:#aaa;font-size:11px;margin-top:6px}</style></head><body>
-<h1>🔮 V6.7 FAVORITE CORRECT SCORE</h1><div class="sub" id="sub"></div><div id="app"></div><script>
-const DATA=[
-{m:"Mark Selby vs Kyren Wilson",fav:"Mark Selby",score:"4-2",conf:"28.4%",fair:"3.52"},
-{m:"Yuan Sijun vs Zhou Yuelong",fav:"Zhou Yuelong",score:"4-3",conf:"22.1%",fair:"4.52"},
-{m:"Joe O'Connor vs Ding Junhui",fav:"Ding Junhui",score:"4-2",conf:"27.8%",fair:"3.60"},
-{m:"Liam Davies vs Wu Yize",fav:"Wu Yize",score:"4-1",conf:"30.2%",fair:"3.31"},
-{m:"Ali Carter vs Gong Chenzhi",fav:"Ali Carter",score:"4-1",conf:"30.8%",fair:"3.25"},
-{m:"Judd Trump vs Anthony McGill",fav:"Judd Trump",score:"4-1",conf:"32.5%",fair:"3.08"},
-{m:"Mark Williams vs Barry Hawkins",fav:"Mark Williams",score:"4-2",conf:"28.9%",fair:"3.46"},
-];
-document.getElementById('sub').textContent=new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+" • Race to 4 • Model says favorite wins";
-let h='';DATA.forEach(d=>{h+=`<div class=match><div class=fav>${d.m}</div><div class=pred>✅ ${d.fav} ${d.score}</div><div class=conf>Confidence ${d.conf} • Fair ${d.fair}</div><div class=small>Bet this exact score at Bet365 — favorite correct regardless of odds</div></div>`});
-document.getElementById('app').innerHTML=h;
-</script></body></html>
+<html><head><meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Snooker V6.8 Calibrated Standalone</title>
+<style>
+body{background:#0a1a12;color:#fff;font-family:Arial;padding:10px;margin:0;padding-bottom:120px}
+.card{background:#12291f;border-radius:16px;padding:14px;margin:14px 0;border:1px solid #1a3a2a}
+.green{background:#00ff88;color:#000;border-radius:12px;padding:4px 10px;float:right;font-size:11px;font-weight:bold}
+.sec{color:#00ff88;font-weight:bold;margin-top:14px;font-size:11px;border-top:1px solid #1a3a2a;padding-top:10px}
+.row{display:flex;align-items:center;flex-wrap:wrap;margin:6px 0;font-size:13px}
+input[type=text]{background:#000;color:#00ff88;border:1px solid #00ff88;border-radius:8px;width:62px;padding:6px;text-align:center;margin-left:8px}
+.badge{background:#2a2a2a;color:#999;padding:4px 8px;border-radius:8px;font-size:11px;margin-left:8px;min-width:120px}
+.topbar{background:#0f231a;border-bottom:1px solid #1a3a2a;padding:12px;border-radius:12px;margin-bottom:10px}
+.meta{font-size:11px;opacity:0.6;margin-top:4px}
+</style>
+<script>
+function chk(id,f){let i=document.getElementById(id);let b=document.getElementById(id+'_b');let v=parseFloat(i.value);if(isNaN(v)){b.innerText='Enter';b.style.background='#2a2a2a';return;}let e=((v/f)-1)*100;if(v>f){b.style.background='#00ff88';b.style.color='#000';b.innerText='VALUE '+v+'>'+f+' (+'+e.toFixed(1)+'%)'}else{b.style.background='#ff4444';b.style.color='#fff';b.innerText='NO VALUE ('+e.toFixed(1)+'%)'}}
+</script></head><body>
+<div class='topbar'><h2 style='margin:0'>🎱 V6.8 CALIBRATED STANDALONE</h2>
+<div class='meta'>10 Sep 21:44 · 7 matches · Shrink 0.65 · Max 88% frame · Fixed 4-0/4-3 bug</div></div>
+<div class='card'><b>Mark Selby vs Kyren Wilson</b><span class='green'>49.1% frame</span>
+<div style='font-size:11px;opacity:0.7'>Best Kyren Wilson 4-2 16.2% Fair 6.17 · Match 48.0%</div>
+<div class='sec'>Correct Score — ALL 8 SCORES</div>
+<div class='row'>Mark Selby 4-0 5.8% Fair 17.26 <input type=text id='a40_0' oninput="chk('a40_0',17.26)"><span id='a40_0_b' class='badge'>Enter</span></div>
+<div class='row'>Mark Selby 4-1 11.8% Fair 8.47 <input type=text id='a41_0' oninput="chk('a41_0',8.47)"><span id='a41_0_b' class='badge'>Enter</span></div>
+<div class='row'>Mark Selby 4-2 15.0% Fair 6.65 <input type=text id='a42_0' oninput="chk('a42_0',6.65)"><span id='a42_0_b' class='badge'>Enter</span></div>
+<div class='row'>Mark Selby 4-3 15.3% Fair 6.53 <input type=text id='a43_0' oninput="chk('a43_0',6.53)"><span id='a43_0_b' class='badge'>Enter</span></div>
+<div class='row'>Kyren Wilson 4-0 6.7% Fair 14.86 <input type=text id='b40_0' oninput="chk('b40_0',14.86)"><span id='b40_0_b' class='badge'>Enter</span></div>
+<div class='row'>Kyren Wilson 4-1 13.2% Fair 7.57 <input type=text id='b41_0' oninput="chk('b41_0',7.57)"><span id='b41_0_b' class='badge'>Enter</span></div>
+<div class='row'>Kyren Wilson 4-2 16.2% Fair 6.17 <input type=text id='b42_0' oninput="chk('b42_0',6.17)"><span id='b42_0_b' class='badge'>Enter</span></div>
+<div class='row'>Kyren Wilson 4-3 15.9% Fair 6.29 <input type=text id='b43_0' oninput="chk('b43_0',6.29)"><span id='b43_0_b' class='badge'>Enter</span></div>
+<div class='sec'>Race to 3 + Over 5.5</div>
+<div class='row'>Over 5.5 62.5% Fair 1.6 <input type=text id='ov_0' oninput="chk('ov_0',1.6)"><span id='ov_0_b' class='badge'>Enter</span></div>
+</div><div class='card'><b>Yuan Sijun vs Zhou Yuelong</b><span class='green'>49.1% frame</span>
+<div style='font-size:11px;opacity:0.7'>Best Zhou Yuelong 4-2 16.2% Fair 6.17 · Match 48.0%</div>
+<div class='sec'>Correct Score — ALL 8 SCORES</div>
+<div class='row'>Yuan Sijun 4-0 5.8% Fair 17.26 <input type=text id='a40_1' oninput="chk('a40_1',17.26)"><span id='a40_1_b' class='badge'>Enter</span></div>
+<div class='row'>Yuan Sijun 4-1 11.8% Fair 8.47 <input type=text id='a41_1' oninput="chk('a41_1',8.47)"><span id='a41_1_b' class='badge'>Enter</span></div>
+<div class='row'>Yuan Sijun 4-2 15.0% Fair 6.65 <input type=text id='a42_1' oninput="chk('a42_1',6.65)"><span id='a42_1_b' class='badge'>Enter</span></div>
+<div class='row'>Yuan Sijun 4-3 15.3% Fair 6.53 <input type=text id='a43_1' oninput="chk('a43_1',6.53)"><span id='a43_1_b' class='badge'>Enter</span></div>
+<div class='row'>Zhou Yuelong 4-0 6.7% Fair 14.86 <input type=text id='b40_1' oninput="chk('b40_1',14.86)"><span id='b40_1_b' class='badge'>Enter</span></div>
+<div class='row'>Zhou Yuelong 4-1 13.2% Fair 7.57 <input type=text id='b41_1' oninput="chk('b41_1',7.57)"><span id='b41_1_b' class='badge'>Enter</span></div>
+<div class='row'>Zhou Yuelong 4-2 16.2% Fair 6.17 <input type=text id='b42_1' oninput="chk('b42_1',6.17)"><span id='b42_1_b' class='badge'>Enter</span></div>
+<div class='row'>Zhou Yuelong 4-3 15.9% Fair 6.29 <input type=text id='b43_1' oninput="chk('b43_1',6.29)"><span id='b43_1_b' class='badge'>Enter</span></div>
+<div class='sec'>Race to 3 + Over 5.5</div>
+<div class='row'>Over 5.5 62.5% Fair 1.6 <input type=text id='ov_1' oninput="chk('ov_1',1.6)"><span id='ov_1_b' class='badge'>Enter</span></div>
+</div><div class='card'><b>Joe O'Connor vs Ding Junhui</b><span class='green'>41.3% frame</span>
+<div style='font-size:11px;opacity:0.7'>Best Ding Junhui 4-2 20.2% Fair 4.94 · Match 31.6%</div>
+<div class='sec'>Correct Score — ALL 8 SCORES</div>
+<div class='row'>Joe O'Connor 4-0 2.9% Fair 34.28 <input type=text id='a40_2' oninput="chk('a40_2',34.28)"><span id='a40_2_b' class='badge'>Enter</span></div>
+<div class='row'>Joe O'Connor 4-1 6.8% Fair 14.61 <input type=text id='a41_2' oninput="chk('a41_2',14.61)"><span id='a41_2_b' class='badge'>Enter</span></div>
+<div class='row'>Joe O'Connor 4-2 10.0% Fair 9.96 <input type=text id='a42_2' oninput="chk('a42_2',9.96)"><span id='a42_2_b' class='badge'>Enter</span></div>
+<div class='row'>Joe O'Connor 4-3 11.8% Fair 8.49 <input type=text id='a43_2' oninput="chk('a43_2',8.49)"><span id='a43_2_b' class='badge'>Enter</span></div>
+<div class='row'>Ding Junhui 4-0 11.8% Fair 8.44 <input type=text id='b40_2' oninput="chk('b40_2',8.44)"><span id='b40_2_b' class='badge'>Enter</span></div>
+<div class='row'>Ding Junhui 4-1 19.6% Fair 5.1 <input type=text id='b41_2' oninput="chk('b41_2',5.1)"><span id='b41_2_b' class='badge'>Enter</span></div>
+<div class='row'>Ding Junhui 4-2 20.2% Fair 4.94 <input type=text id='b42_2' oninput="chk('b42_2',4.94)"><span id='b42_2_b' class='badge'>Enter</span></div>
+<div class='row'>Ding Junhui 4-3 16.7% Fair 5.98 <input type=text id='b43_2' oninput="chk('b43_2',5.98)"><span id='b43_2_b' class='badge'>Enter</span></div>
+<div class='sec'>Race to 3 + Over 5.5</div>
+<div class='row'>Over 5.5 58.8% Fair 1.7 <input type=text id='ov_2' oninput="chk('ov_2',1.7)"><span id='ov_2_b' class='badge'>Enter</span></div>
+</div><div class='card'><b>Liam Davies vs Wu Yize</b><span class='green'>50.0% frame</span>
+<div style='font-size:11px;opacity:0.7'>Best Liam Davies 4-2 15.6% Fair 6.4 · Match 50.0%</div>
+<div class='sec'>Correct Score — ALL 8 SCORES</div>
+<div class='row'>Liam Davies 4-0 6.2% Fair 16.0 <input type=text id='a40_3' oninput="chk('a40_3',16.0)"><span id='a40_3_b' class='badge'>Enter</span></div>
+<div class='row'>Liam Davies 4-1 12.5% Fair 8.0 <input type=text id='a41_3' oninput="chk('a41_3',8.0)"><span id='a41_3_b' class='badge'>Enter</span></div>
+<div class='row'>Liam Davies 4-2 15.6% Fair 6.4 <input type=text id='a42_3' oninput="chk('a42_3',6.4)"><span id='a42_3_b' class='badge'>Enter</span></div>
+<div class='row'>Liam Davies 4-3 15.6% Fair 6.4 <input type=text id='a43_3' oninput="chk('a43_3',6.4)"><span id='a43_3_b' class='badge'>Enter</span></div>
+<div class='row'>Wu Yize 4-0 6.2% Fair 16.0 <input type=text id='b40_3' oninput="chk('b40_3',16.0)"><span id='b40_3_b' class='badge'>Enter</span></div>
+<div class='row'>Wu Yize 4-1 12.5% Fair 8.0 <input type=text id='b41_3' oninput="chk('b41_3',8.0)"><span id='b41_3_b' class='badge'>Enter</span></div>
+<div class='row'>Wu Yize 4-2 15.6% Fair 6.4 <input type=text id='b42_3' oninput="chk('b42_3',6.4)"><span id='b42_3_b' class='badge'>Enter</span></div>
+<div class='row'>Wu Yize 4-3 15.6% Fair 6.4 <input type=text id='b43_3' oninput="chk('b43_3',6.4)"><span id='b43_3_b' class='badge'>Enter</span></div>
+<div class='sec'>Race to 3 + Over 5.5</div>
+<div class='row'>Over 5.5 62.5% Fair 1.6 <input type=text id='ov_3' oninput="chk('ov_3',1.6)"><span id='ov_3_b' class='badge'>Enter</span></div>
+</div><div class='card'><b>Ali Carter vs Gong Chenzhi</b><span class='green'>50.0% frame</span>
+<div style='font-size:11px;opacity:0.7'>Best Ali Carter 4-2 15.6% Fair 6.4 · Match 50.0%</div>
+<div class='sec'>Correct Score — ALL 8 SCORES</div>
+<div class='row'>Ali Carter 4-0 6.2% Fair 16.0 <input type=text id='a40_4' oninput="chk('a40_4',16.0)"><span id='a40_4_b' class='badge'>Enter</span></div>
+<div class='row'>Ali Carter 4-1 12.5% Fair 8.0 <input type=text id='a41_4' oninput="chk('a41_4',8.0)"><span id='a41_4_b' class='badge'>Enter</span></div>
+<div class='row'>Ali Carter 4-2 15.6% Fair 6.4 <input type=text id='a42_4' oninput="chk('a42_4',6.4)"><span id='a42_4_b' class='badge'>Enter</span></div>
+<div class='row'>Ali Carter 4-3 15.6% Fair 6.4 <input type=text id='a43_4' oninput="chk('a43_4',6.4)"><span id='a43_4_b' class='badge'>Enter</span></div>
+<div class='row'>Gong Chenzhi 4-0 6.2% Fair 16.0 <input type=text id='b40_4' oninput="chk('b40_4',16.0)"><span id='b40_4_b' class='badge'>Enter</span></div>
+<div class='row'>Gong Chenzhi 4-1 12.5% Fair 8.0 <input type=text id='b41_4' oninput="chk('b41_4',8.0)"><span id='b41_4_b' class='badge'>Enter</span></div>
+<div class='row'>Gong Chenzhi 4-2 15.6% Fair 6.4 <input type=text id='b42_4' oninput="chk('b42_4',6.4)"><span id='b42_4_b' class='badge'>Enter</span></div>
+<div class='row'>Gong Chenzhi 4-3 15.6% Fair 6.4 <input type=text id='b43_4' oninput="chk('b43_4',6.4)"><span id='b43_4_b' class='badge'>Enter</span></div>
+<div class='sec'>Race to 3 + Over 5.5</div>
+<div class='row'>Over 5.5 62.5% Fair 1.6 <input type=text id='ov_4' oninput="chk('ov_4',1.6)"><span id='ov_4_b' class='badge'>Enter</span></div>
+</div><div class='card'><b>Judd Trump vs Anthony McGill</b><span class='green'>65.8% frame</span>
+<div style='font-size:11px;opacity:0.7'>Best Judd Trump 4-1 25.7% Fair 3.9 · Match 81.4%</div>
+<div class='sec'>Correct Score — ALL 8 SCORES</div>
+<div class='row'>Judd Trump 4-0 18.8% Fair 5.32 <input type=text id='a40_5' oninput="chk('a40_5',5.32)"><span id='a40_5_b' class='badge'>Enter</span></div>
+<div class='row'>Judd Trump 4-1 25.7% Fair 3.9 <input type=text id='a41_5' oninput="chk('a41_5',3.9)"><span id='a41_5_b' class='badge'>Enter</span></div>
+<div class='row'>Judd Trump 4-2 21.9% Fair 4.56 <input type=text id='a42_5' oninput="chk('a42_5',4.56)"><span id='a42_5_b' class='badge'>Enter</span></div>
+<div class='row'>Judd Trump 4-3 15.0% Fair 6.67 <input type=text id='a43_5' oninput="chk('a43_5',6.67)"><span id='a43_5_b' class='badge'>Enter</span></div>
+<div class='row'>Anthony McGill 4-0 1.4% Fair 73.41 <input type=text id='b40_5' oninput="chk('b40_5',73.41)"><span id='b40_5_b' class='badge'>Enter</span></div>
+<div class='row'>Anthony McGill 4-1 3.6% Fair 27.87 <input type=text id='b41_5' oninput="chk('b41_5',27.87)"><span id='b41_5_b' class='badge'>Enter</span></div>
+<div class='row'>Anthony McGill 4-2 5.9% Fair 16.94 <input type=text id='b42_5' oninput="chk('b42_5',16.94)"><span id='b42_5_b' class='badge'>Enter</span></div>
+<div class='row'>Anthony McGill 4-3 7.8% Fair 12.86 <input type=text id='b43_5' oninput="chk('b43_5',12.86)"><span id='b43_5_b' class='badge'>Enter</span></div>
+<div class='sec'>Race to 3 + Over 5.5</div>
+<div class='row'>Over 5.5 50.6% Fair 1.98 <input type=text id='ov_5' oninput="chk('ov_5',1.98)"><span id='ov_5_b' class='badge'>Enter</span></div>
+</div><div class='card'><b>Mark Williams vs Barry Hawkins</b><span class='green'>42.2% frame</span>
+<div style='font-size:11px;opacity:0.7'>Best Barry Hawkins 4-2 19.9% Fair 5.03 · Match 33.4%</div>
+<div class='sec'>Correct Score — ALL 8 SCORES</div>
+<div class='row'>Mark Williams 4-0 3.2% Fair 31.52 <input type=text id='a40_6' oninput="chk('a40_6',31.52)"><span id='a40_6_b' class='badge'>Enter</span></div>
+<div class='row'>Mark Williams 4-1 7.3% Fair 13.63 <input type=text id='a41_6' oninput="chk('a41_6',13.63)"><span id='a41_6_b' class='badge'>Enter</span></div>
+<div class='row'>Mark Williams 4-2 10.6% Fair 9.44 <input type=text id='a42_6' oninput="chk('a42_6',9.44)"><span id='a42_6_b' class='badge'>Enter</span></div>
+<div class='row'>Mark Williams 4-3 12.2% Fair 8.16 <input type=text id='a43_6' oninput="chk('a43_6',8.16)"><span id='a43_6_b' class='badge'>Enter</span></div>
+<div class='row'>Barry Hawkins 4-0 11.2% Fair 8.96 <input type=text id='b40_6' oninput="chk('b40_6',8.96)"><span id='b40_6_b' class='badge'>Enter</span></div>
+<div class='row'>Barry Hawkins 4-1 18.8% Fair 5.31 <input type=text id='b41_6' oninput="chk('b41_6',5.31)"><span id='b41_6_b' class='badge'>Enter</span></div>
+<div class='row'>Barry Hawkins 4-2 19.9% Fair 5.03 <input type=text id='b42_6' oninput="chk('b42_6',5.03)"><span id='b42_6_b' class='badge'>Enter</span></div>
+<div class='row'>Barry Hawkins 4-3 16.8% Fair 5.96 <input type=text id='b43_6' oninput="chk('b43_6',5.96)"><span id='b43_6_b' class='badge'>Enter</span></div>
+<div class='sec'>Race to 3 + Over 5.5</div>
+<div class='row'>Over 5.5 59.5% Fair 1.68 <input type=text id='ov_6' oninput="chk('ov_6',1.68)"><span id='ov_6_b' class='badge'>Enter</span></div>
+</div></body></html>
